@@ -2,7 +2,9 @@ const Atendimento = require('../models/atendimentos');
 
 module.exports = app => {
     app.get('/atendimentos', (req, res) => {
-        Atendimento.lista(res);
+        Atendimento.lista()
+            .then(resultados => res.status(200).json(resultados))
+            .catch(erros => res.status(400).json(erros))
     });
 
     // :id - parametro que sera enviado atraves da url da requisição
@@ -15,8 +17,9 @@ module.exports = app => {
     app.post('/atendimentos', (req, res) => {
         const dadosAtendimento = req.body;
 
-        // res esta sendo enviado como parametro para poder ser tratado no model e enviado ao usuario com melhor precisao 
-        Atendimento.adiciona(dadosAtendimento, res);
+        Atendimento.adiciona(dadosAtendimento)
+            .then(atendimendoCadastrado => res.status(201).json(atendimendoCadastrado))
+            .catch(erros => res.status(400).json(erros))
     });
 
     app.patch('/atendimentos/:id', (req, res) => {
